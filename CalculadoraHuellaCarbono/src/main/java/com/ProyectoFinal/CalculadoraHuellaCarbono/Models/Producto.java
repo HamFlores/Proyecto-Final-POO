@@ -30,6 +30,9 @@ public class Producto {
     @Getter @Setter @Column(name = "huella_carbono")
     private float huellaCarbono;
 
+    public Producto() {
+    }
+
     public Producto(int id, String nombre, String empresa, String unidad, float huellaCarbono, int categoria_id) {
         this.id = id;
         this.nombre = nombre;
