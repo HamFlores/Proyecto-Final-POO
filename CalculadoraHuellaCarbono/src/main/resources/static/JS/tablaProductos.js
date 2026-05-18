@@ -1,30 +1,46 @@
 document.addEventListener("DOMContentLoaded", () => {
-    cargarTablaProductos();
+    cargarProductos();
 });
 
-async function cargarTablaProductos() {
-    const request = await fetch("/productos", {
-        method: "GET",
-        headers: {
-            "Accept": "application/json",
-            "Content-Type": "application/json"
-        }
-    });
+function cargarProductos() {
+    // Apunta al endpoint de tus productos
+    const urlApi = "/productos"; 
 
-    const productos = await request.json();
+    fetch(urlApi)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Error al conectar con el servidor de productos");
+            }
+            return response.json();
+        })
+        .then(productos => {
+            const tbody = document.getElementById("cuerpoTabla");
+            tbody.innerHTML = ""; // Limpiamos el texto de carga
 
-    console.log(productos);
+            if (productos.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6">No hay productos en la base de datos.</td></tr>`;
+                return;
+            }
 
-    let listadoProductos = '';
-    for (let producto of productos) {
-        let rowProducto = '<tr> <th scope="row">'+ producto.id +'</th> <td>' 
-        + producto.nombre + '</td> <td>' + producto.categoria_id + '</td> <td>' 
-        + producto.unidad + '</td> <td>' + producto.huellaCarbono + '</td> <td>' 
-        + producto.empresa + '</td> </tr>';
+            // Iteramos sobre cada producto e insertamos la fila
+            productos.forEach(producto => {
+                const fila = document.createElement("tr");
 
-        listadoProductos += rowProducto;
-    }
+                fila.innerHTML = `
+                    <th scope="row">${producto.id}</th>
+                    <td><strong>${producto.nombre}</strong></td>
+                    <td>${producto.categoria ? producto.categoria.nombre : "Sin Categoría"}</td>
+                    <td>${producto.unidad}</td>
+                    <td>${producto.huellaCarbono} kg CO₂e</td>
+                    <td>${producto.empresa ? producto.empresa : '<i>No especificada</i>'}</td>
+                `;
 
-    document.querySelector('#tablaAlimentos tbody').outerHTML = listadoProductos;
-
+                tbody.appendChild(fila);
+            });
+        })
+        .catch(error => {
+            console.error("Error en Fetch:", error);
+            const tbody = document.getElementById("cuerpoTabla");
+            tbody.innerHTML = `<tr><td colspan="6" style="color: red; font-weight: bold;">Error al conectar con el backend de la calculadora.</td></tr>`;
+        });
 }

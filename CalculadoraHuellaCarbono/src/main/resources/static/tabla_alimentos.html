@@ -7,7 +7,7 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     </head>
     <body>
-        <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <nav class="navbar navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
             <div class="container-fluid">
                 <a class="navbar-brand" href="#">Calculadora de Huella de Carbono</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
@@ -33,6 +33,9 @@
             </div>
         </nav>
 
+        <img src="images/barn-farm-field-svgrepo-com.svg" class="img-fluid" height="100" width="100">
+        <h1 class="display-1">Tabla de Alimentos</h1>
+
         <table id="tablaAlimentos" class="table">
             <thead>
                 <tr>
@@ -44,7 +47,7 @@
                 <th scope="col">Empresa</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id = "cuerpoTabla">
             </tbody>
             </table>
 

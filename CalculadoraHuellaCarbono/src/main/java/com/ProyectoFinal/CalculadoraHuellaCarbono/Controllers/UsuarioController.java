@@ -1,0 +1,23 @@
+package com.ProyectoFinal.CalculadoraHuellaCarbono.Controllers;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.ProyectoFinal.CalculadoraHuellaCarbono.Dao.UsuarioDao;
+import com.ProyectoFinal.CalculadoraHuellaCarbono.Models.Usuario;
+
+@RestController
+public class UsuarioController {
+
+    @Autowired
+    private UsuarioDao usuarioDao;
+    
+    @RequestMapping(value = "/api/registroUsuario", method = RequestMethod.POST)
+    public void registrarUsuario(@RequestBody Usuario usuario) {
+        // Implementation for registering user
+        usuarioDao.registrarUsuario(usuario);
+    }
+}
