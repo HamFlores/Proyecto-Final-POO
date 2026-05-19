@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ProyectoFinal.CalculadoraHuellaCarbono.Dao.UsuarioDao;
 import com.ProyectoFinal.CalculadoraHuellaCarbono.Models.Usuario;
 
+import de.mkammerer.argon2.Argon2;
+import de.mkammerer.argon2.Argon2Factory;
+
 @RestController
 public class UsuarioController {
 
@@ -18,6 +21,11 @@ public class UsuarioController {
     @RequestMapping(value = "/api/registroUsuario", method = RequestMethod.POST)
     public void registrarUsuario(@RequestBody Usuario usuario) {
         // Implementation for registering user
+
+        Argon2 argon2 = Argon2Factory.create(Argon2Factory.Argon2Types.ARGON2id);
+        String hashedPassword = argon2.hash(1, 1024, 1, usuario.getContraseña());
+        usuario.setContraseña(hashedPassword);
+
         usuarioDao.registrarUsuario(usuario);
     }
 }

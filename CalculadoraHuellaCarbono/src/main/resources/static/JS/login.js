@@ -19,6 +19,8 @@ async function registrarUsuario() {
         },
         body: JSON.stringify(datos)
     });
+
+    window.location.href = "login.html";
 }
 
 async function iniciarSesion() {
@@ -36,5 +38,13 @@ async function iniciarSesion() {
         body: JSON.stringify(datos)
     });
 
-    const response = await request.json();
+    const response = await request.text();
+
+    if(response != "FAIL") {
+        localStorage.token = response; // Guardar el token JWT en el almacenamiento local
+        localStorage.correo_electronico = datos.correo_electronico; // Guardar el correo electrónico en el almacenamiento local
+        window.location.href = "index.html";
+    } else {
+        alert("Credenciales inválidas.");
+    }
 }

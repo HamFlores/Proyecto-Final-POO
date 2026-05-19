@@ -8,20 +8,27 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ProyectoFinal.CalculadoraHuellaCarbono.Dao.UsuarioDao;
 import com.ProyectoFinal.CalculadoraHuellaCarbono.Models.Usuario;
+import com.ProyectoFinal.CalculadoraHuellaCarbono.Utils.JWTUtil;
 
 @RestController
 public class AuthController {
 
     @Autowired
     private UsuarioDao usuarioDao;
-    
+
+    @Autowired
+    private JWTUtil jwtUtil;
+
     @RequestMapping(value = "/api/iniciarSesion", method = RequestMethod.POST)
     public String iniciarSesion(@RequestBody Usuario usuario) {
         // Implementation for user login
-        if (usuarioDao.verificarCredenciales(usuario)) {
-            return "Inicio de sesión exitoso";
+        Usuario usuarioLogueado = usuarioDao.obtenerUsuarioPorCredenciales(usuario);
+
+        if (usuarioLogueado != null) {
+            String tokenJWT = jwtUtil.create(String.valueOf(usuarioLogueado.getId()), usuarioLogueado.getCorreo_electronico());
+            return tokenJWT;
         } else {
-            return "Credenciales inválidas";
+            return "FAIL";
         }
     }
 

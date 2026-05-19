@@ -6,5 +6,5 @@ public interface UsuarioDao {
     
     public void registrarUsuario(Usuario usuario);
 
-    public boolean verificarCredenciales(Usuario usuario);
+    public Usuario obtenerUsuarioPorCredenciales(Usuario usuario);
 }
