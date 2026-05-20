@@ -22,7 +22,7 @@ public class UsuarioDaoImp implements UsuarioDao {
     
     @Override
     public void registrarUsuario(Usuario usuario) {
-        // Implementation for registering user
+        // Registrar un nuevo usuario en la base de datos
         entityManager.merge(usuario);
     }
 

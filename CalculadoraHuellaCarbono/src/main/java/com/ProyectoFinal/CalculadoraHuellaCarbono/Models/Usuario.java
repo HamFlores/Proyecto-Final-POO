@@ -8,6 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 @Table(name = "usuarios")
@@ -21,6 +22,7 @@ public class Usuario {
     private String nombre;
     @Getter @Setter @Column(name = "correo_electronico")
     private String correo_electronico;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Getter @Setter @Column(name = "contraseña")
     private String contraseña;
 }
