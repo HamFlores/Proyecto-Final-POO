@@ -16,6 +16,8 @@ public class ProductoDaoImp implements ProductoDao {
 
     @PersistenceContext
     EntityManager entityManager;
+
+    // Método para obtener la lista de productos desde la base de datos
     
     @Override
     public List<Producto> getProductos() {

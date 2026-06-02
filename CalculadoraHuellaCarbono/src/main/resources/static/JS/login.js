@@ -1,6 +1,9 @@
 async function procesarRegistro(event) {
     if (event) event.preventDefault();
 
+    //JSON para enviar al backend
+    //Envia los datos del formulario de registro al backend para crear una nueva cuenta
+    //nombre, correo_electronico, contraseña
     let datos = {};
     datos.nombre = document.getElementById("reg-nombre").value;
     datos.correo_electronico = document.getElementById("reg-email").value;
@@ -39,6 +42,9 @@ async function procesarRegistro(event) {
 async function procesarLogin(event) {
     if (event) event.preventDefault();
 
+    //JSON para enviar al backend
+    //Envia los datos del formulario de login al backend para iniciar sesión
+    //correo_electronico, contraseña
     let datos = {};
     datos.correo_electronico = document.getElementById("login-email").value;
     datos.contraseña = document.getElementById("login-password").value;

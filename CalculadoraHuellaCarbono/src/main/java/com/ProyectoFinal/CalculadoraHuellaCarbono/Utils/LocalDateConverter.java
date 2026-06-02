@@ -7,14 +7,6 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
 
-/**
- * Convierte LocalDate <-> Long (milisegundos epoch) para SQLite.
- *
- * El driver JDBC de SQLite almacena LocalDate como epoch en milisegundos
- * guardado en columnas TEXT. Este converter maneja ambas direcciones:
- *  - Al escribir: LocalDate → Long (ms desde 1970-01-01 UTC)
- *  - Al leer:     Long (como String) → LocalDate
- */
 @Converter(autoApply = false)
 public class LocalDateConverter implements AttributeConverter<LocalDate, String> {
 

@@ -1,14 +1,8 @@
-// ============================================================
-// ESTADO GLOBAL
-// ============================================================
 let todosLosProductos = [];
 let productosFiltrados = [];
 let paginaActual = 1;
 const ITEMS_POR_PAGINA = 8;
 
-// ============================================================
-// INICIALIZACIÓN
-// ============================================================
 document.addEventListener("DOMContentLoaded", () => {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -19,7 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
     cargarProductos();
     cargarHistorial();
 
-    // Buscador con debounce
+    // Buscador de productos
     document.getElementById("buscadorProductos").addEventListener("input", () => {
         filtrarYRenderizar();
     });
@@ -31,9 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
-// ============================================================
-// CARGA Y RENDERIZADO DE PRODUCTOS
-// ============================================================
+
 function cargarProductos() {
     fetch("/productos")
         .then(res => {
@@ -150,9 +142,7 @@ function paginaSiguiente() {
     if (paginaActual < totalPaginas) irPagina(paginaActual + 1);
 }
 
-// ============================================================
 // REGISTRO DE CONSUMO - ALIMENTOS
-// ============================================================
 function registrarAlimento(productoId, categoriaId) {
     const token = localStorage.getItem("token");
     const inputCantidad = document.getElementById(`cantidad-${productoId}`);
@@ -197,9 +187,8 @@ function registrarAlimento(productoId, categoriaId) {
     });
 }
 
-// ============================================================
+
 // REGISTRO DE GASOLINA
-// ============================================================
 function registrarGasolina() {
     const token = localStorage.getItem("token");
     const litros = parseFloat(document.getElementById("litrosGasolina").value);
@@ -242,9 +231,7 @@ function registrarGasolina() {
     });
 }
 
-// ============================================================
 // HISTORIAL DE CONSUMO
-// ============================================================
 function cargarHistorial() {
     const token = localStorage.getItem("token");
 
@@ -352,9 +339,7 @@ function eliminarRegistro(id) {
     });
 }
 
-// ============================================================
 // DESCARGA DE REPORTE EN ARCHIVO .TXT
-// ============================================================
 function descargarReporte() {
     const token = localStorage.getItem("token");
     const btn = document.getElementById("btnDescargar");
@@ -402,9 +387,7 @@ function descargarReporte() {
     });
 }
 
-// ============================================================
 // UTILIDADES
-// ============================================================
 function escHtml(str) {
     if (str === null || str === undefined) return "";
     return String(str)

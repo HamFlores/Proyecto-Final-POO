@@ -21,9 +21,11 @@ public class AuthController {
 
     @RequestMapping(value = "/api/iniciarSesion", method = RequestMethod.POST)
     public String iniciarSesion(@RequestBody Usuario usuario) {
-        // Implementation for user login
+        // Utiliza el dao para verificar las credenciales del usuario
         Usuario usuarioLogueado = usuarioDao.obtenerUsuarioPorCredenciales(usuario);
 
+        // Si el usuario es válido, genera un token JWT y lo devuelve
+        //JWT es para saber que usuario esta logueado y para proteger las rutas del backend
         if (usuarioLogueado != null) {
             String tokenJWT = jwtUtil.create(String.valueOf(usuarioLogueado.getId()), usuarioLogueado.getCorreo_electronico());
             return tokenJWT;

@@ -12,6 +12,7 @@ import com.ProyectoFinal.CalculadoraHuellaCarbono.Models.Producto;
 @RestController
 public class ProductoController {
 
+    //Inyecta el ProductoDao para acceder a los datos de productos
     @Autowired
     private ProductoDao productoDao;
 

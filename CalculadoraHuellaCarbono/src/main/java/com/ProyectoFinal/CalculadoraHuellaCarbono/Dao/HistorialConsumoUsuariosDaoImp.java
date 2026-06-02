@@ -26,8 +26,7 @@ public class HistorialConsumoUsuariosDaoImp implements HistorialConsumoUsuariosD
 
     @Override
     public List<HistorialConsumoUsuarios> getHistorialConsumoUsuarios(int usuarioId) {
-        // Consulta HQL mapeada directamente a la entidad de Java
-        // Trae los consumos ordenados por fecha de forma descendente (el más reciente primero)
+        //Query de Hibernate para obtener historial usasdo fecha mas reciente primero
         String query = "FROM HistorialConsumoUsuarios WHERE usuario.id = :usuarioId ORDER BY fecha DESC";
         return entityManager.createQuery(query, HistorialConsumoUsuarios.class)
                 .setParameter("usuarioId", usuarioId)

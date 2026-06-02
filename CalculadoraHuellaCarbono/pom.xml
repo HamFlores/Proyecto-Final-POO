@@ -40,7 +40,7 @@
 		<dependency>
 			<groupId>org.hibernate.orm</groupId>
 			<artifactId>hibernate-community-dialects</artifactId>
-			<version>6.4.4.Final</version> <!-- Usamos la misma versión exacta de tu core de Hibernate -->
+			<version>6.4.4.Final</version>
 		</dependency>
 
 		<dependency>

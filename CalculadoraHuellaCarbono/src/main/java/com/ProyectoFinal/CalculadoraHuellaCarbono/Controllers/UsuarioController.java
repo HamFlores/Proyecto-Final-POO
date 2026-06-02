@@ -20,7 +20,7 @@ public class UsuarioController {
     
     @RequestMapping(value = "/api/registroUsuario", method = RequestMethod.POST)
     public void registrarUsuario(@RequestBody Usuario usuario) {
-        // Implementation for registering user
+        //metodo para cifrar la contraseña
 
         Argon2 argon2 = Argon2Factory.create(Argon2Factory.Argon2Types.ARGON2id);
         String hashedPassword = argon2.hash(1, 1024, 1, usuario.getContraseña());

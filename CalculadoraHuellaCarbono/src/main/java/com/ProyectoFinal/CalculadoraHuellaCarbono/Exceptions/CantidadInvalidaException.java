@@ -1,9 +1,8 @@
 package com.ProyectoFinal.CalculadoraHuellaCarbono.Exceptions;
 
-/**
- * Excepción lanzada cuando el usuario envía una cantidad inválida
- * para registrar un consumo (por ejemplo, cero, negativa o nula).
- */
+
+//Excepcion lanzada cuando el usuario envia una cantidad invalida
+
 public class CantidadInvalidaException extends RuntimeException {
 
     public CantidadInvalidaException() {

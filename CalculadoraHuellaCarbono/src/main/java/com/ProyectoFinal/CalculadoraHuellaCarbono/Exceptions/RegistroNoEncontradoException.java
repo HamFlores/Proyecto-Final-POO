@@ -1,9 +1,7 @@
 package com.ProyectoFinal.CalculadoraHuellaCarbono.Exceptions;
 
-/**
- * Excepción lanzada cuando se intenta operar sobre un registro
- * que no existe en la base de datos o no pertenece al usuario autenticado.
- */
+//Excepcion lanzada cuando se intenta operar sobre un registro que no existe en la base de datos o no pertenece al usuario
+
 public class RegistroNoEncontradoException extends RuntimeException {
 
     public RegistroNoEncontradoException(int id) {

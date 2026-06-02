@@ -43,23 +43,22 @@ public class HCUController {
     @Autowired
     private JWTUtil jwtUtil;
 
-    // ----------------------------------------------------------------
-    // POST /registrar  — Registra un nuevo consumo (alimento o gasolina)
-    // ----------------------------------------------------------------
+    
+    // POST /registrar Registra un nuevo consumo (alimento o gasolina)
     @PostMapping("/registrar")
     public ResponseEntity<?> registrar(
             @RequestHeader("Authorization") String token,
             @RequestBody ConsumoRequest request) {
 
-        // 1. Validar token con excepción personalizada
+        //obtiene id de usuario por el token, pero si el token no es valido lanza una excepcion
         String usuarioId = obtenerUsuarioIdOLanzarExcepcion(token);
 
-        // 2. Validar cantidad con excepción personalizada
+        //si la cantidad que ingresa el usuario es incorrecta, lanza una excepcion
         if (request.getCantidad() <= 0) {
             throw new CantidadInvalidaException(request.getCantidad());
         }
 
-        // 3. Construir el registro de consumo
+        //Formatea el historial de consumo para guarda en la base de datos
         HistorialConsumoUsuarios consumo = new HistorialConsumoUsuarios();
         Usuario usuario = entityManager.find(Usuario.class, Integer.parseInt(usuarioId));
         consumo.setUsuario(usuario);
@@ -80,50 +79,55 @@ public class HCUController {
             consumo.setHuellaCarbonoTotal(request.getCantidad() * FACTOR_GASOLINA_KG_CO2_POR_LITRO);
         }
 
-        // 4. Persistir en la base de datos
+        //guarda el consumo en la base de datos
         historialConsumoUsuariosDao.registrarHistorialConsumoUsuarios(consumo);
+        //devuelve un mensaje de éxito
         return ResponseEntity.ok("{\"status\": \"success\"}");
     }
 
-    // ----------------------------------------------------------------
     // GET /historial  — Devuelve el historial del usuario autenticado
-    // ----------------------------------------------------------------
     @GetMapping("/historial")
     public ResponseEntity<?> obtenerHistorial(@RequestHeader("Authorization") String token) {
+        //obtiene id de usuario por el token, pero si el token no es valido lanza una excepcion
         String usuarioId = obtenerUsuarioIdOLanzarExcepcion(token);
+        //Usa el dao para obtener el historial de consumo del usuario y lo devuelve como respuesta
         List<HistorialConsumoUsuarios> historial =
                 historialConsumoUsuariosDao.getHistorialConsumoUsuarios(Integer.parseInt(usuarioId));
+        //devuelve el historial como respuesta
         return ResponseEntity.ok(historial);
     }
 
-    // ----------------------------------------------------------------
     // DELETE /eliminar/{id}  — Elimina un registro del historial
-    // ----------------------------------------------------------------
     @DeleteMapping("/eliminar/{id}")
     public ResponseEntity<?> eliminar(
             @RequestHeader("Authorization") String token,
             @PathVariable int id) {
 
+        //obtiene id de usuario por el token, pero si el token no es valido lanza una excepcion
         String usuarioId = obtenerUsuarioIdOLanzarExcepcion(token);
 
+        // Usa el dao para eliminar el registro del historial, pero solo si pertenece al usuario autenticado
         boolean eliminado = historialConsumoUsuariosDao
                 .eliminarHistorialConsumoUsuarios(id, Integer.parseInt(usuarioId));
 
+        // Si no se eliminó ningún registro, significa que el ID no existe o no pertenece al usuario
         if (!eliminado) {
             throw new RegistroNoEncontradoException(id);
         }
+        // Devuelve un mensaje de éxito
         return ResponseEntity.ok("{\"status\": \"deleted\"}");
     }
 
-    // ----------------------------------------------------------------
-    // GET /exportar  — Genera y descarga un archivo .txt con el historial
-    // ----------------------------------------------------------------
+    // GET /exportar  — Genera y descarga un archivo .txt con el historia   
     @GetMapping("/exportar")
+    //Devuelve un archivo de texto
     public ResponseEntity<byte[]> exportarHistorial(@RequestHeader("Authorization") String token) {
-
+        //obtiene id de usuario por el token, pero si el token no es valido lanza una excepcion
         String usuarioId = obtenerUsuarioIdOLanzarExcepcion(token);
+        //Convierte el ID de usuario a entero para usarlo en las consultas
         int idInt = Integer.parseInt(usuarioId);
 
+        //Obtiene el usuario y su historial de consumo para generar el contenido del archivo de texto
         Usuario usuario = entityManager.find(Usuario.class, idInt);
         List<HistorialConsumoUsuarios> historial =
                 historialConsumoUsuariosDao.getHistorialConsumoUsuarios(idInt);
@@ -144,14 +148,7 @@ public class HCUController {
                 .body(contenido.getBytes(java.nio.charset.StandardCharsets.UTF_8));
     }
 
-    // ----------------------------------------------------------------
-    // Métodos privados de apoyo
-    // ----------------------------------------------------------------
-
-    /**
-     * Extrae el ID del usuario del token JWT.
-     * Lanza UsuarioNoAutorizadoException si el token es inválido.
-     */
+    
     private String obtenerUsuarioIdOLanzarExcepcion(String token) {
         try {
             String id = jwtUtil.getKey(token);
@@ -164,15 +161,12 @@ public class HCUController {
         }
     }
 
-    /**
-     * Genera el contenido del archivo .txt con el reporte de consumo.
-     */
     private String generarArchivoTexto(Usuario usuario, List<HistorialConsumoUsuarios> historial) {
         StringBuilder sb = new StringBuilder();
         String linea = "=".repeat(60);
         String lineaFina = "-".repeat(60);
 
-        // ---- Encabezado ----
+        //encabezado
         sb.append(linea).append("\n");
         sb.append("   REPORTE DE HUELLA DE CARBONO PERSONAL\n");
         sb.append("   Calculadora de Huella de Carbono - ProyectoFinal\n");
@@ -183,7 +177,7 @@ public class HCUController {
         sb.append("Fecha   : ").append(LocalDate.now()
                 .format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))).append("\n\n");
 
-        // ---- Tabla de registros ----
+        //tabla de consumo
         sb.append(lineaFina).append("\n");
         sb.append(String.format("%-12s %-22s %-12s %-10s %-10s%n",
                 "Fecha", "Producto/Actividad", "Tipo", "Cantidad", "CO2e (kg)"));
@@ -202,7 +196,7 @@ public class HCUController {
                         ? (reg.getProducto().getUnidad() != null ? reg.getProducto().getUnidad() : "kg")
                         : "Lts";
 
-                // Truncar nombre si es muy largo
+                //recorta el nombre
                 if (nombre.length() > 20) nombre = nombre.substring(0, 18) + "..";
 
                 sb.append(String.format("%-12s %-22s %-12s %-10s %-10s%n",
@@ -219,7 +213,7 @@ public class HCUController {
             sb.append(String.format("%-48s TOTAL: %.4f kg CO2e%n", "", totalCO2));
             sb.append(linea).append("\n\n");
 
-            // ---- Clasificación del impacto ----
+            //Clasificación del impacto
             sb.append("CLASIFICACION DE IMPACTO:\n");
             if (totalCO2 < 5) {
                 sb.append("  [BAJO]    Menos de 5 kg CO2e. ¡Excelente! Sigue así.\n");
@@ -231,7 +225,7 @@ public class HCUController {
             sb.append("\n");
         }
 
-        // ---- Consejos ----
+        // consejos
         sb.append(linea).append("\n");
         sb.append("CONSEJOS PARA REDUCIR TU HUELLA DE CARBONO:\n");
         sb.append(lineaFina).append("\n");
